@@ -1,2 +1,2 @@
-# data-modelling-with-postgres
-udacity project
+# Data Modelling with Postgres
+
