@@ -6,6 +6,18 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    """
+    Process a song file in json format
+
+    Args:
+        cur: allows to execute PostgreSQL commands in a database session
+        filepath: where the resource is located
+    
+    Returns:
+        None
+
+    """
+
     # open song file
     df = pd.read_json(filepath, lines=True)
 
@@ -19,6 +31,18 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    """
+    Process log files in json format
+
+    Args:
+        cur: allows to execute PostgreSQL commands in a database session
+        filepath: where the resource is located
+    
+    Returns:
+        None
+
+    """
+
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -29,7 +53,7 @@ def process_log_file(cur, filepath):
     t = pd.to_datetime(df["ts"], unit="ms")
     
     # insert time data records
-    time_data = ([tm.timestamp(), tm.hour, tm.day, tm.week, tm.month, tm.year, tm.weekday()] for tm in t)
+    time_data = ([int(tm.timestamp()), tm.hour, tm.day, tm.week, tm.month, tm.year, tm.weekday()] for tm in t)
     column_labels = (["timestamp", "hour", "day", "week_of_year", "month", "year", "weekday"])
     time_df = pd.DataFrame(time_data, columns=column_labels) 
 
@@ -61,6 +85,20 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    Orchestra the process of all files
+
+    Args:
+        cur: allows to execute PostgreSQL commands in a database session
+        conn: a database connection
+        filepath: where the resource is located
+        func: method it's going to execute to process files
+    
+    Returns:
+        None
+
+    """
+
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):

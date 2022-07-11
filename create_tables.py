@@ -32,9 +32,15 @@ def drop_tables(cur, conn):
     Drops each table using the queries in `drop_table_queries` list.
     """
     for query in drop_table_queries:
-        print(query)
-        cur.execute(query)
-        conn.commit()
+        try:
+            print(query)
+            cur.execute(query)
+            conn.commit()
+        except:
+            print("failed ", query)
+            curs = conn.cursor()
+            curs.execute("ROLLBACK")
+            conn.commit()
 
 
 def create_tables(cur, conn):
@@ -42,8 +48,15 @@ def create_tables(cur, conn):
     Creates each table using the queries in `create_table_queries` list. 
     """
     for query in create_table_queries:
-        if len(query) > 0:
-            cur.execute(query)
+        try:
+            if len(query) > 0:
+                print(query)
+                cur.execute(query)
+                conn.commit()
+        except:
+            print("failed ", query)
+            curs = conn.cursor()
+            curs.execute("ROLLBACK")
             conn.commit()
 
 
